@@ -45,14 +45,16 @@ def dispatch(request, app, name):
     if view is None:
         raise Http404()
 
-    args, defaults = view.signature
-    required = [arg for arg in args if arg not in defaults]
-    kwargs = defaults.copy()
-    kwargs.update(get_request_data(request))
+    kwargs = get_request_data(request)
 
-    for arg in required:
-        if arg not in kwargs:
-            raise DispatchError("Argument '{0}' missing".format(arg))
+    args, defaults = view.signature
+    missing = [arg for arg in args if (arg not in kwargs and
+                                       arg not in defaults)]
+
+    if missing:
+        raise DispatchError('Required argument{0} {1} missing'.format(
+            '' if len(missing) == 1 else 's',
+            ', '.join(["'{0}'".format(arg) for arg in missing])))
 
     return HttpResponse(get_response_content(view.func(request, **kwargs)),
                         content_type='application/json')
