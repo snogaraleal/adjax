@@ -54,9 +54,7 @@ def dispatch(request, app, name):
         if arg not in kwargs:
             raise DispatchError("Argument '{0}' missing".format(arg))
 
-    view.func(request, **kwargs)
-
-    return HttpResponse(get_response_content(),
+    return HttpResponse(get_response_content(view.func(request, **kwargs)),
                         content_type='application/json')
 
 
