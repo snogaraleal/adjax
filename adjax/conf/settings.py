@@ -7,7 +7,7 @@ def get_setting(name, default):
     return getattr(settings, 'ADJAX_{0}'.format(name.upper()), default)
 
 
-TEMPLATE = get_setting('template', 'adjax/template')
+TEMPLATE = get_setting('template', 'adjax/interface')
 DATA = get_setting('data', {})
 CONTENT_TYPE = get_setting('content_type', 'application/javascript')
 MODULE_NAME = get_setting('module_name', 'ajax')

@@ -1,0 +1,5 @@
+Django==1.6.5
+flake8==2.1.0
+pep8==1.5.7
+pyflakes==0.8.1
+six==1.6.1

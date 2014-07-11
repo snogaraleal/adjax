@@ -46,10 +46,17 @@ def dispatch(request, app, name):
         raise Http404()
 
     args, defaults = view.signature
+    required = [arg for arg in args if arg not in defaults]
     kwargs = defaults.copy()
     kwargs.update(get_request_data(request))
 
-    return HttpResponse(get_response_content(view.func(request, **kwargs)),
+    for arg in required:
+        if arg not in kwargs:
+            raise DispatchError("Argument '{0}' missing".format(arg))
+
+    view.func(request, **kwargs)
+
+    return HttpResponse(get_response_content(),
                         content_type='application/json')
 
 

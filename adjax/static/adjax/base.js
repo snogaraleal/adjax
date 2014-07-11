@@ -1,12 +1,5 @@
-
-var adjax = (function () {
-
-    /*
-     * Data from framework
-     */
+var adjax = function (data, views) {
     var pipeline = [];
-    var data = {{ data|safe }};
-    var views = {{ views|safe }};
 
     /*
      * Cookies
@@ -123,19 +116,12 @@ var adjax = (function () {
     };
 
     return {
-        'pipeline': pipeline,
         'data': data,
         'views': views,
+        'pipeline': pipeline,
         'cookies': cookies,
         'json': json,
+        'utils': utils,
         'call': call,
     };
-})();
-
-
-/*
- * Enable django CSRF
- */
-adjax.pipeline.push(function (xhr) {
-    xhr.setRequestHeader('X-CSRFToken', adjax.cookies.get('csrftoken'));
-});
+};

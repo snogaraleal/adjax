@@ -1,0 +1,8 @@
+adjax = adjax({{ data|safe }}, {{ views|safe }});
+
+/*
+ * Enable django CSRF
+ */
+adjax.pipeline.push(function (xhr) {
+    xhr.setRequestHeader('X-CSRFToken', adjax.cookies.get('csrftoken'));
+});
