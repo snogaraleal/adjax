@@ -1,9 +1,12 @@
-from json import loads, dumps
+from json import dumps
 
 from django.http import Http404, HttpResponse
+from django.template import loader
 
 from .conf import settings
-from .registry import registry
+from .importer import importer
+from .registry import registry, View
+from .serializer import serializer, ObjectType
 
 
 class DispatchError(Exception):
@@ -19,7 +22,7 @@ def get_request_data(request):
         raise DispatchError('POST method required')
 
     try:
-        data = loads(request.body.decode())
+        data = serializer.decode(request.body.decode())
     except ValueError:
         raise DispatchError('Request body is not valid JSON')
 
@@ -33,11 +36,12 @@ def get_response_content(data):
     """ Get JSON response content.
     """
     try:
-        return dumps(data)
+        return serializer.encode(data)
     except ValueError:
         raise DispatchError('View did not return a serializable value')
 
 
+@importer.ensure_loaded
 def dispatch(request, app, name):
     """ Dispatch request to corresponding view.
     """
@@ -60,7 +64,15 @@ def dispatch(request, app, name):
                         content_type='application/json')
 
 
+@importer.ensure_loaded
 def interface(request):
     """ Return client code for accessing views.
     """
-    return HttpResponse(registry.render(), content_type=settings.CONTENT_TYPE)
+    return HttpResponse(loader.render_to_string(settings.TEMPLATE, {
+        'data': dumps(settings.DATA),
+        'views': dumps(registry.views,
+                       default=View.dumps_default),
+        'types': dumps(serializer.object_types_by_name,
+                       default=ObjectType.dumps_default),
+        'type': ObjectType.TYPE,
+    }), content_type=settings.CONTENT_TYPE)

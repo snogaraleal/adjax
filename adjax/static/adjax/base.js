@@ -1,5 +1,29 @@
-var adjax = function (data, views) {
-    var pipeline = [];
+var adjax = function (data, views, types, type) {
+    /*
+     * Get object constructor
+     */
+    Object.prototype.getType = function () { 
+        var funcNameRegex = /function (.{1,})\(/;
+        var results = (funcNameRegex).exec((this).constructor.toString());
+        return (results && results.length > 1) ? results[1] : '';
+    };
+
+    /*
+     * Load JS implementation of custom types
+     */
+    var funcs = {};
+    for (var name in types) {
+        eval('var encode = (' + types[name]['encode'] + ');');
+        eval('var decode = (' + types[name]['decode'] + ');');
+
+        types[name]['encode'] = encode;
+        types[name]['decode'] = decode;
+
+        funcs[types[name]['type']] = {
+            'encode': encode,
+            'decode': decode,
+        };
+    }
 
     /*
      * Cookies
@@ -26,14 +50,41 @@ var adjax = function (data, views) {
     })();
 
     /*
-     * JSON
+     * Serializer
      */
-    var json = (function () {
+    var serializer = (function () {
         // TODO: Implement JSON parsing and decoding alternatives
 
+        /*
+         * Serialize to string
+         */
+        var encode = function (data) {
+            return JSON.stringify(data, function (key, value) {
+                if (key !== '' && typeof value === 'object') {
+                    var type = value.getType();
+                    if (type in funcs) {
+                        return funcs[type]['encode'](value);
+                    }
+                }
+                return value;
+            });
+        };
+
+        /*
+         * Deserialize from string
+         */
+        var decode = function (data) {
+            return JSON.parse(data, function (key, value) {
+                if (typeof value === 'object' && value[type] !== undefined) {
+                    return types[value[type]]['decode'](value);
+                }
+                return value;
+            });
+        };
+
         return {
-            'encode': JSON.stringify,
-            'decode': JSON.parse,
+            'encode': encode,
+            'decode': decode,
         };
     })();
 
@@ -74,6 +125,7 @@ var adjax = function (data, views) {
     /*
      * Call AJAX view
      */
+    var pipeline = [];
     var call = function (app) {
         return function (name) {
             var view = views[app][name];
@@ -99,7 +151,7 @@ var adjax = function (data, views) {
                         if (xhr.readyState === 4) {
                             var data;
                             try {
-                                data = json.decode(xhr.responseText);
+                                data = serializer.decode(xhr.responseText);
                             } catch (e) {
                                 data = null;
                             }
@@ -110,7 +162,7 @@ var adjax = function (data, views) {
                 pipeline.forEach(function (item) {
                     item(xhr);
                 });
-                xhr.send(json.encode(data));
+                xhr.send(serializer.encode(data));
             };
         };
     };
@@ -118,10 +170,14 @@ var adjax = function (data, views) {
     return {
         'data': data,
         'views': views,
-        'pipeline': pipeline,
+        'types': types,
+        'type': type,
+
         'cookies': cookies,
-        'json': json,
+        'serializer': serializer,
         'utils': utils,
+
+        'pipeline': pipeline,
         'call': call,
     };
 };

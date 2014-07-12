@@ -1,4 +1,8 @@
-adjax = adjax({{ data|safe }}, {{ views|safe }});
+adjax = adjax(
+    {{ data|safe }},
+    {{ views|safe }},
+    {{ types|safe }},
+    '{{ type }}');
 
 /*
  * Enable django CSRF

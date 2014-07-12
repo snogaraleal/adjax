@@ -10,4 +10,5 @@ def get_setting(name, default):
 TEMPLATE = get_setting('template', 'adjax/interface')
 DATA = get_setting('data', {})
 CONTENT_TYPE = get_setting('content_type', 'application/javascript')
-MODULE_NAME = get_setting('module_name', 'ajax')
+VIEWS_MODULE_NAME = get_setting('module_name', 'ajax')
+TYPES_MODULE_NAME = get_setting('module_name', 'types')
