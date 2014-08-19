@@ -26,8 +26,8 @@ def func2(request, a=1, b=2, c=3):
 
 @serializer.enable
 class CustomType(ObjectType):
-    cls = CustomObject
     name = 'custom'
+    cls = CustomObject
 
     @classmethod
     def encode(cls, value):
@@ -39,20 +39,3 @@ class CustomType(ObjectType):
     @classmethod
     def decode(cls, value):
         return CustomObject(value['x'], value['y'])
-
-    js_type = 'CustomType'
-
-    js_encode = """
-        function (value) {
-            return {
-                'x': value.getX(),
-                'x': value.getY(),
-            }
-        }
-    """
-
-    js_decode = """
-        function (value) {
-            return (new CustomType(value['x'], value['y']));
-        }
-    """

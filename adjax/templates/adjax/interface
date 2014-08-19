@@ -1,12 +1,1 @@
-adjax = adjax(
-    {{ data|safe }},
-    {{ views|safe }},
-    {{ types|safe }},
-    '{{ type }}');
-
-/*
- * Enable django CSRF
- */
-adjax.pipeline.push(function (xhr) {
-    xhr.setRequestHeader('X-CSRFToken', adjax.cookies.get('csrftoken'));
-});
+adjax = adjax({{ data }}, {{ views }}, '{{ type }}');

@@ -2,6 +2,7 @@ from json import dumps
 
 from django.http import Http404, HttpResponse
 from django.template import loader
+from django.utils.safestring import mark_safe
 
 from .conf import settings
 from .importer import importer
@@ -69,10 +70,8 @@ def interface(request):
     """ Return client code for accessing views.
     """
     return HttpResponse(loader.render_to_string(settings.TEMPLATE, {
-        'data': dumps(settings.DATA),
-        'views': dumps(registry.views,
-                       default=View.dumps_default),
-        'types': dumps(serializer.object_types_by_name,
-                       default=ObjectType.dumps_default),
+        'data': mark_safe(dumps(settings.DATA)),
+        'views': mark_safe(dumps(registry.views,
+                                 default=View.dumps_default)),
         'type': ObjectType.TYPE,
     }), content_type=settings.CONTENT_TYPE)

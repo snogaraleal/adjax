@@ -7,12 +7,8 @@ class ObjectType(object):
 
     TYPE = '__type__'
 
-    cls = None
     name = None
-
-    ###########
-    # PY IMPL #
-    ###########
+    cls = None
 
     @classmethod
     def encode(cls, value):
@@ -27,48 +23,6 @@ class ObjectType(object):
         """ Convert dictionary to value.
         """
         return value['value']
-
-    ###########
-    # JS IMPL #
-    ###########
-
-    # JS type to match
-    js_type = None
-
-    # JS encode implementation
-    js_encode = """
-        function (value) {
-            return value;
-        }
-    """
-
-    # JS decode implementation
-    js_decode = """
-        function (value) {
-            return value;
-        }
-    """
-
-    ########
-    # DATA #
-    ########
-
-    @classmethod
-    def get_data(cls):
-        return {
-            'type': cls.js_type,
-            'encode': cls.js_encode,
-            'decode': cls.js_decode,
-        }
-
-    @classmethod
-    def dumps_default(cls, derived):
-        """ Get data to use as JSON default.
-        """
-        if issubclass(derived, cls):
-            return derived.get_data()
-        else:
-            return derived
 
 
 class Serializer(object):
