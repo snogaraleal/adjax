@@ -35,7 +35,7 @@ class Serializer(object):
         if object_types is None:
             object_types = []
 
-        self.object_types = object_types
+        self.object_types = list(object_types)
         self.object_types_by_cls = {}
         self.object_types_by_name = {}
 

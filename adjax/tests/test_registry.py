@@ -76,4 +76,4 @@ class RegistryTestCase(TestCase):
         registry = Registry()
         registry.register(func)
 
-        self.assertEqual(registry.get('myapp', 'func'), func)
+        self.assertEqual(registry.get('myapp', 'func').func, func)
