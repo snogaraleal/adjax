@@ -1,3 +1,6 @@
-from django.db import models  # NOQA
 
-# No models yet.
+
+class CustomObject(object):
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
