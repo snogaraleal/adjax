@@ -17,6 +17,8 @@ INSTALLED_APPS = (
 
     'adjax',
     'myapp',
+
+    'django_nose',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -31,7 +33,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'example.urls'
-
 
 DATABASES = {
     'default': {
@@ -51,3 +52,10 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates/'),
 )
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=adjax',
+]

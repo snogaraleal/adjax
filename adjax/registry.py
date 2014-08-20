@@ -38,7 +38,13 @@ class View(object):
         """ Get view arguments and default values.
         """
         argspec = getargspec(self.func)
-        argspec.args.remove('request')
+
+        try:
+            argspec.args.remove('request')
+        except ValueError:
+            raise TypeError(
+                '{0}.{1} does not have request as first argument'.format(
+                    self.app, self.name))
 
         defaults = {}
         if argspec.defaults:
