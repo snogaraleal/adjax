@@ -70,6 +70,7 @@ def interface(request):
     """ Return client code for accessing views.
     """
     return HttpResponse(loader.render_to_string(settings.TEMPLATE, {
+        'variable': settings.VARIABLE,
         'data': mark_safe(dumps(settings.DATA)),
         'views': mark_safe(dumps(registry.views,
                                  default=View.dumps_default)),

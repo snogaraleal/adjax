@@ -1,3 +1,4 @@
+{% load staticfiles %}
 {% load adjax %}
 
 <!DOCTYPE HTML>
@@ -11,42 +12,7 @@
     <!-- Include ADJAX scripts -->
     {% adjax_scripts %}
 
-    <script>
-        /*
-         * Enable django CSRF
-         */
-        adjax.pipeline.push(function (xhr) {
-            xhr.setRequestHeader('X-CSRFToken', adjax.cookies.get('csrftoken'));
-        });
-
-        /*
-         * Example custom type
-         */
-        var CustomType = function (x, y) {
-            this.x = x;
-            this.y = y;
-        };
-
-        CustomType.prototype.getX = function () {
-            return this.x;
-        };
-
-        CustomType.prototype.getY = function () {
-            return this.y;
-        };
-
-        adjax.register('custom', CustomType, {
-            encode: function (value) {
-                return {
-                    'x': value.getX(),
-                    'y': value.getY(),
-                }
-            },
-
-            decode: function (value) {
-                return (new CustomType(value['x'], value['y']));
-            }
-        });
-    </script>
+    <!-- Custom type scripts -->
+    <script src="{% static 'custom.js' %}"></script>
   </body>
 </html>
