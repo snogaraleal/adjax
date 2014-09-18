@@ -1,5 +1,5 @@
 from collections import defaultdict
-from inspect import getargspec
+from inspect import getfullargspec
 
 from django.core.urlresolvers import reverse
 
@@ -13,6 +13,15 @@ class View(object):
         """
         self.func = func
 
+    @property
+    def wrapped_func(self):
+        """ Return wrapped function if the view function is decorated.
+        """
+        if hasattr(self.func, '__wrapped__'):
+            return self.func.__wrapped__
+        else:
+            return self.func
+
     ###########
     # VIEW ID #
     ###########
@@ -21,13 +30,13 @@ class View(object):
     def app(self):
         """ Get view app.
         """
-        return self.func.__module__.split('.')[-2]
+        return self.wrapped_func.__module__.split('.')[-2]
 
     @property
     def name(self):
         """ Get view name.
         """
-        return self.func.__name__
+        return self.wrapped_func.__name__
 
     ############
     # SETTINGS #
@@ -37,7 +46,7 @@ class View(object):
     def signature(self):
         """ Get view arguments and default values.
         """
-        argspec = getargspec(self.func)
+        argspec = getfullargspec(self.wrapped_func)
 
         try:
             argspec.args.remove('request')

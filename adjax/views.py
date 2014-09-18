@@ -61,7 +61,12 @@ def dispatch(request, app, name):
             '' if len(missing) == 1 else 's',
             ', '.join(["'{0}'".format(arg) for arg in missing])))
 
-    return HttpResponse(get_response_content(view.func(request, **kwargs)),
+    try:
+        data = view.func(request, **kwargs)
+    except Exception as e:
+        raise DispatchError(str(e))
+
+    return HttpResponse(get_response_content(data),
                         content_type='application/json')
 
 

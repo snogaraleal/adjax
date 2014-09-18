@@ -1,10 +1,12 @@
 from adjax.registry import registry
+from adjax.utils.types import typed
 
 from .models import CustomObject
 
 
 @registry.register
-def func1(request, a, b, c=1):
+@typed()
+def func1(request, a: int, b, c=1):
     return {
         'a': a,
         'b': b,
@@ -15,5 +17,6 @@ def func1(request, a, b, c=1):
 
 
 @registry.register
-def func2(request, a=1, b=2, c=3):
-    return bool(a > b > c)
+@typed()
+def func2(request, a: int=1, b: int=2, c: int=3) -> CustomObject:
+    return CustomObject(1, 2)
