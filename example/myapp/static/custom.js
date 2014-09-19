@@ -25,3 +25,17 @@ ADJAX.serializer.register(
         return (new CustomType(value['x'], value['y']));
     })
 );
+
+Date.prototype.toJSON = function () {
+    return this;
+};
+
+ADJAX.serializer.register(
+    'datetime', Date, new adjax.Type(function (value) {
+        return {
+            'value': value.toISOString(),
+        };
+    }, function (value) {
+        return new Date(value['value']);
+    })
+);
