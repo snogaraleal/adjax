@@ -25,6 +25,7 @@ setup(
     package_data={
         '': [
             'templates/adjax/*',
+            'static/adjax/*',
         ],
     },
     install_requires=[
