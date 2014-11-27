@@ -17,11 +17,16 @@ setup(
         'adjax',
         'adjax/conf',
         'adjax/static',
-        'adjax/templates',
         'adjax/templatetags',
+        'adjax/templates',
         'adjax/tests',
         'adjax/utils',
     ],
+    package_data={
+        '': [
+            'templates/adjax/*',
+        ],
+    },
     install_requires=[
         'Django>=1.6.5',
         'flake8>=2.1.0',
