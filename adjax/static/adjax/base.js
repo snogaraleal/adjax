@@ -111,7 +111,7 @@ var adjax = (function () {
                 var name = value.constructor[Serializer.INTERNAL_TYPE_NAME];
                 if (name in this.types) {
                     var data = this.types[name].encode(value);
-                    data[type] = name;
+                    data[this.typeName] = name;
                     return data;
                 }
             }

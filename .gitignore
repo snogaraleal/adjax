@@ -1,3 +1,7 @@
 *.pyc
 __pycache__
 .coverage
+adjax.egg-info
+ez_setup.py
+build
+dist
