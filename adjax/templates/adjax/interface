@@ -1,1 +1,4 @@
-window.{{ variable }} = new adjax.Interface({{ data }}, {{ views }}, '{{ type }}');
+window.{{ variable }} = new adjax.Interface(
+    JSON.parse('{{ data }}'),
+    JSON.parse('{{ views }}'),
+    '{{ type }}');
