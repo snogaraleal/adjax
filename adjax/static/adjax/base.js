@@ -107,7 +107,7 @@ var adjax = (function () {
      */
     Serializer.prototype.encode = function (data) {
         return JSON.stringify(data, (function (key, value) {
-            if (key !== '' && typeof value === 'object') {
+            if (key !== '' && value && typeof value === 'object') {
                 var name = value.constructor[Serializer.INTERNAL_TYPE_NAME];
                 if (name in this.types) {
                     var data = this.types[name].encode(value);
@@ -124,7 +124,7 @@ var adjax = (function () {
      */
     Serializer.prototype.decode = function (data) {
         return JSON.parse(data, (function (key, value) {
-            if (typeof value === 'object' &&
+            if (value && typeof value === 'object' &&
                     value[this.typeName] !== undefined) {
                 var name = value[this.typeName];
                 if (this.types[name] === undefined) {
