@@ -143,4 +143,3 @@ class SerializerTestCase(TestCase):
         self.assertRaises(TypeError, serializer.encode, {
             'key': CustomObject(42),
         })
-
