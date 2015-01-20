@@ -7,8 +7,8 @@ from setuptools import setup
 setup(
     name='adjax',
     version='0.0.1',
-    description='Django AJAX framework.',
-    long_description=('Django AJAX framework.'),
+    description='Django AJAX RPC.',
+    long_description=('Django AJAX RPC.'),
     url='http://adjax.io',
     license='MIT',
     author='Sebastián Nogara',
@@ -30,12 +30,7 @@ setup(
     },
     install_requires=[
         'Django>=1.6.5',
-        'flake8>=2.1.0',
-        'pep8>=1.5.7',
-        'pyflakes>=0.8.1',
         'six>=1.6.1',
-        'django-nose>=1.2',
-        'coverage>=3.7.1',
     ],
     include_package_data=True,
     zip_safe=False,

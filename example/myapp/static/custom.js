@@ -26,9 +26,7 @@ ADJAX.serializer.register(
     })
 );
 
-Date.prototype.toJSON = function () {
-    return this;
-};
+Date.prototype.toJSON = undefined;
 
 ADJAX.serializer.register(
     'datetime', Date, new adjax.Type(function (value) {
