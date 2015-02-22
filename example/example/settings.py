@@ -30,6 +30,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'adjax.middleware.DispatchErrorMiddleware',
+    'adjax.middleware.CsrfEnforceMiddleware',
 )
 
 ROOT_URLCONF = 'example.urls'
