@@ -1,12 +1,12 @@
 #!/usr/bin/python3 -tt
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(
     name='django-adjax',
-    version='0.1a1',
+    version='0.1',
     description='Django AJAX RPC.',
     long_description=('Easy-to-use AJAX-based RPC mechanism for Django with '
                       'extensible serialization.'),
@@ -14,21 +14,7 @@ setup(
     license='MIT',
     author='Sebastian Nogara',
     author_email='snogaraleal@gmail.com',
-    packages=[
-        'adjax',
-        'adjax/conf',
-        'adjax/static',
-        'adjax/templatetags',
-        'adjax/templates',
-        'adjax/tests',
-        'adjax/utils',
-    ],
-    package_data={
-        '': [
-            'templates/adjax/*',
-            'static/adjax/*',
-        ],
-    },
+    packages=find_packages(),
     install_requires=[
         'Django>=1.6.5',
         'six>=1.6.1',

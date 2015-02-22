@@ -1,0 +1,2 @@
+include adjax/templates/adjax/*
+include adjax/static/adjax/*
