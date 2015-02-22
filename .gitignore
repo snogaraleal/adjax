@@ -1,7 +1,6 @@
 *.pyc
 __pycache__
 .coverage
-adjax.egg-info
-ez_setup.py
+django_adjax.egg-info
 build
 dist
