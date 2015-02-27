@@ -5,13 +5,13 @@ library-agnostic  meaning that you do not need jQuery or underscore. The
 library also provides argument type validation and an extensible JSON
 serializer.
 
-## Installing
+## Installation
 
 This project supports **Python 3** only.
 
 Install with `pip install django-adjax`.
 
-## Configuring
+## Configuration
 
 ### 1. Update settings
 
@@ -68,7 +68,7 @@ ADJAX.register(function (xhr) {
 });
 ```
 
-## Adding views
+## Views (RPC functions)
 
 Adjax looks for RPC functions in the `ajax` module in each app. RPC functions
 have to be explicitly exposed with the `@registry.register` decorator. Create
@@ -90,6 +90,8 @@ decorator. This feature uses
 [PEP-3107](https://www.python.org/dev/peps/pep-3107/) function annotations.
 
 ```python
+# myapp/ajax.py
+
 from adjax.registry import registry
 from adjax.utils.types import typed
 
@@ -103,7 +105,15 @@ def do_stuff(request, a: int, b: float, c=1) -> dict:
     }
 ```
 
-## Adding serializer types
+You can now call this function from JS.
+
+```javascript
+ADJAX.apps.myapp.do_stuff(a, b, function (data) {
+    console.log(data);
+});
+```
+
+## Serializer types
 
 ### 1. Implement server-side serialization
 
