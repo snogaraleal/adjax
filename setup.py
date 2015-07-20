@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-adjax',
-    version='0.1',
+    version='0.2',
     description='Django AJAX RPC.',
     long_description=('Easy-to-use AJAX-based RPC mechanism for Django with '
                       'extensible serialization.'),
@@ -26,6 +26,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 2',
         'Framework :: Django',
     ]
 )
