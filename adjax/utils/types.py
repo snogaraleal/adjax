@@ -1,5 +1,6 @@
 from functools import wraps
-from inspect import getfullargspec
+
+from .inspect import get_full_arg_spec
 
 
 class typed(object):
@@ -10,8 +11,9 @@ class typed(object):
         return False
     """
 
-    def __init__(self, strict=False):
+    def __init__(self, annotations=None, strict=False):
         self.strict = strict
+        self.annotations = annotations
 
     def is_instance(self, instance, cls):
         """ Check that instance is of type cls.
@@ -24,30 +26,25 @@ class typed(object):
     def __call__(self, func):
         """ Decorate function.
         """
+        argnames, defaults, annotations = get_full_arg_spec(func)
+        annotations = self.annotations or annotations
 
-        argspec = getfullargspec(func)
-
-        defaults = {}
-        if argspec.defaults:
-            defaults = dict(zip(reversed(argspec.args),
-                                reversed(argspec.defaults)))
-
-        return_cls = argspec.annotations.get('return')
+        return_cls = annotations.get('return')
 
         @wraps(func)
         def wrapper(*args, **kwargs):
             values = defaults.copy()
-            values.update(dict(zip(argspec.args, args)))
+            values.update(dict(zip(argnames, args)))
             values.update(kwargs)
 
-            for argname, argcls in argspec.annotations.items():
+            for argname, argcls in annotations.items():
                 if argname == 'return':
                     continue
 
                 argvalue = values[argname]
                 if not self.is_instance(argvalue, argcls):
                     raise TypeError(
-                        'Value {0} of type {1} is not a {2} instance'.format(
+                        'Value {} of type {} is not a {} instance'.format(
                             argvalue, type(argvalue), argcls))
 
             value = func(*args, **kwargs)
@@ -55,9 +52,12 @@ class typed(object):
             if (return_cls is not None and
                     not self.is_instance(value, return_cls)):
                 raise TypeError(
-                    'Returned {0} of type {1} instead of {2}'.format(
+                    'Returned {} of type {} instead of {}'.format(
                         value, type(value), return_cls))
 
             return value
+
+        if not hasattr(wrapper, '__wrapped__'):
+            wrapper.__wrapped__ = func
 
         return wrapper

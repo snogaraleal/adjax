@@ -1,7 +1,8 @@
 from collections import defaultdict
-from inspect import getfullargspec
 
 from django.core.urlresolvers import reverse
+
+from .utils.inspect import get_full_arg_spec
 
 
 class View(object):
@@ -38,29 +39,24 @@ class View(object):
         """
         return self.wrapped_func.__name__
 
-    ############
-    # SETTINGS #
-    ############
+    ########
+    # SPEC #
+    ########
 
     @property
     def signature(self):
         """ Get view arguments and default values.
         """
-        argspec = getfullargspec(self.wrapped_func)
+        argnames, defaults, annotations = get_full_arg_spec(self.wrapped_func)
 
         try:
-            argspec.args.remove('request')
+            argnames.remove('request')
         except ValueError:
             raise TypeError(
-                '{0}.{1} does not have request as first argument'.format(
+                '{}.{} does not have request as first argument'.format(
                     self.app, self.name))
 
-        defaults = {}
-        if argspec.defaults:
-            defaults = dict(zip(reversed(argspec.args),
-                                reversed(argspec.defaults)))
-
-        return argspec.args, defaults
+        return argnames, defaults
 
     @property
     def url(self):

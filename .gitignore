@@ -1,6 +1,12 @@
 *.pyc
 __pycache__
-.coverage
+
 django_adjax.egg-info
 build
 dist
+
+*.sqlite
+*.sqlite2
+*.sqlite3
+
+.coverage
