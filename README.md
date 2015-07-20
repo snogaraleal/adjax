@@ -1,13 +1,12 @@
 # Django ADJAX
 
-**Adjax** is a simple AJAX-based RPC mechanism for Django. Adjax is JS
-library-agnostic  meaning that you do not need jQuery or underscore. The
-library also provides argument type validation and an extensible JSON
-serializer.
+**Adjax** lets you call Python functions defined in the server from JavaScript code in the client in a safe way. Adjax is a simple AJAX-based RPC mechanism for Django.
+
+Adjax provides argument type validation and an extensible JSON serializer that allows you to plug in your own types.
 
 ## Installation
 
-This project supports **Python 3** only.
+This project supports both **Python 2** and **Python 3**.
 
 Install with `pip install django-adjax`.
 
@@ -105,6 +104,24 @@ def do_stuff(request, a: int, b: float, c=1) -> dict:
     }
 ```
 
+Since Python 2 doesn't support function annotations you can pass a dictionary of types to the `typed` decorator.
+
+```python
+# myapp/ajax.py
+
+from adjax.registry import registry
+from adjax.utils.types import typed
+
+@registry.register
+@typed({'a': int, 'b': float, 'return': dict}, strict=False)
+def do_stuff(request, a, b, c=1):
+    return {
+        'a': a,
+        'b': b,
+        'c': c,
+    }
+```
+
 You can now call this function from JS.
 
 ```javascript
@@ -115,7 +132,9 @@ ADJAX.apps.myapp.do_stuff(a, b, function (data) {
 
 ## Serializer types
 
-### 1. Implement server-side serialization
+Custom serializer types allow you to send and receive objects that are not of a built-in type. Here is a demonstration implementing the date type.
+
+### 1. Server-side serialization
 
 Register a new `ObjectType` with name `datetime`.
 
@@ -143,16 +162,16 @@ class DateTime(ObjectType):
         return datetime.strptime(value['value'], cls.DATETIME_FORMAT)
 ```
 
-### 2. Implement client-side serialization
+### 2. Client-side serialization
 
 Register a new serializer with the same name as the server-side
 implementation which is `datetime`.
 
 ```javascript
-// This is to overcome all implicit serialization in JSON.stringify
+// Disable implicit serialization in JSON.stringify
 Date.prototype.toJSON = undefined;
 
-// https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON_behavior
+// For more information see https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON_behavior
 
 ADJAX.serializer.register(
     'datetime', Date, new adjax.Type(function (value) {
@@ -165,8 +184,7 @@ ADJAX.serializer.register(
 );
 ```
 
-Now you can send and receive `Date` objects seamlessly from Python to JS
-and vice-versa.
+Now you can send and receive `Date` objects from Python to JS and vice-versa.
 
 ## License
 
