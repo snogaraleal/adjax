@@ -9,7 +9,7 @@ register = template.Library()
 def get_script_tag(source):
     """ Get HTML script tag with the specified source.
     """
-    return '<script type="text/javascript" src="{0}"></script>'.format(source)
+    return '<script type="text/javascript" src="{}"></script>'.format(source)
 
 
 def get_script_tags(*sources):

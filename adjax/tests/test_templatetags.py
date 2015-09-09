@@ -13,7 +13,7 @@ class TemplateTagsTestCase(TestCase):
         """
         source = 'https://cdn.com/source.js'
         expected_html = ('<script type="text/javascript" '
-                         'src="{0}"></script>').format(source)
+                         'src="{}"></script>').format(source)
 
         self.assertEqual(get_script_tag(source), expected_html)
 

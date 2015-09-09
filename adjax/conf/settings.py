@@ -4,7 +4,7 @@ from django.conf import settings
 def get_setting(name, default):
     """ Get setting by name.
     """
-    return getattr(settings, 'ADJAX_{0}'.format(name.upper()), default)
+    return getattr(settings, 'ADJAX_{}'.format(name.upper()), default)
 
 
 TEMPLATE = get_setting('template', 'adjax/interface')

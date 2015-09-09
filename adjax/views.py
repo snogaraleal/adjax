@@ -57,14 +57,11 @@ def dispatch(request, app, name):
                                        arg not in defaults)]
 
     if missing:
-        raise DispatchError('Required argument{0} {1} missing'.format(
+        raise DispatchError('Required argument{} {} missing'.format(
             '' if len(missing) == 1 else 's',
-            ', '.join(["'{0}'".format(arg) for arg in missing])))
+            ', '.join(["'{}'".format(arg) for arg in missing])))
 
-    try:
-        data = view.func(request, **kwargs)
-    except Exception as e:
-        raise DispatchError(str(e))
+    data = view.func(request, **kwargs)
 
     return HttpResponse(get_response_content(data),
                         content_type='application/json')
