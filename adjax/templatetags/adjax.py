@@ -1,6 +1,7 @@
 from django import template
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import reverse
+from django.utils import safestring
 
 
 register = template.Library()
@@ -22,5 +23,6 @@ def get_script_tags(*sources):
 def adjax_scripts():
     """ Return HTML with scripts.
     """
-    return get_script_tags(static('adjax/base.js'),
-                           reverse('adjax.views.interface'))
+    from adjax import views
+    return safestring.mark_safe(get_script_tags(static('adjax/base.js'),
+                                reverse(views.interface)))

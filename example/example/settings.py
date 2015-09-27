@@ -3,7 +3,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = '-__#&*^^_0)q7tpi=5jy2sehore#c(r+7kmndb+9butqz3lpf#'
 DEBUG = True
-TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -17,8 +16,6 @@ INSTALLED_APPS = (
 
     'adjax',
     'myapp',
-
-    'django_nose',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,13 +47,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates/'),
-)
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=adjax',
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates/'),
+        ],
+    },
 ]
