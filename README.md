@@ -1,8 +1,6 @@
 # Django ADJAX
 
-**Adjax** lets you call Python functions defined in the server from JavaScript code in the client in a safe way. Adjax is a simple AJAX-based RPC mechanism for Django.
-
-Adjax provides argument type validation and an extensible JSON serializer that allows you to plug in your own types.
+**Adjax** lets you call Python functions from JavaScript. Adjax is a simple AJAX-based RPC mechanism for Django that provides argument type validation and an extensible JSON serializer that allows you to plug in your own types.
 
 ## Installation
 
@@ -21,7 +19,7 @@ Add `adjax.middleware.CsrfEnforceMiddleware` to `MIDDLEWARE_CLASSES`.
 Add `adjax.middleware.DispatchErrorMiddleware` to `MIDDLEWARE_CLASSES`.
 
 The `DispatchErrorMiddleware` middleware handles `adjax.views.DispatchError` 
-exceptions and returns an error message rather than raising a 500 server
+exceptions and returns an error message rather than throwing a 500 server
 error. You can replace this middleware with your own.
 
 ### 2. Add URLs
@@ -63,7 +61,7 @@ loaded after `{% adjax_scripts %}`.
 
 ```javascript
 ADJAX.register(function (xhr) {
-    xhr.setRequestHeader('X-CSRFToken', adjax.utils.getCookie('csrftoken'));
+    xhr.setRequestHeader('X-CSRFToken', adjax.utils.cookie('csrftoken'));
 });
 ```
 
