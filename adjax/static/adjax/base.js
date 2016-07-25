@@ -19,7 +19,7 @@ var adjax = (function () {
                 null, Array(arrays[0].length)
             ).map(function (_, i) {
                 return arrays.map(function (array) {
-                    return array[i]
+                    return array[i];
                 });
             });
         };
@@ -50,7 +50,7 @@ var adjax = (function () {
         /**
          * Get the value of the specified cookie
          */
-        var getCookie = function (name) {
+        var cookie = function (name) {
             var value = '; ' + document.cookie;
             var parts = value.split('; ' + name + '=');
             if (parts.length == 2) {
@@ -61,7 +61,7 @@ var adjax = (function () {
         return {
             'zip': zip,
             'obj': obj,
-            'getCookie': getCookie,
+            'cookie': cookie,
         };
     })();
 
@@ -87,8 +87,8 @@ var adjax = (function () {
     /**
      * Object capable of serializing custom types
      */
-    var Serializer = function (typeName) {
-        this.typeName = typeName;
+    var Serializer = function (type) {
+        this.type = type;
         this.types = {};
     };
 
@@ -111,7 +111,7 @@ var adjax = (function () {
                 var name = value.constructor[Serializer.INTERNAL_TYPE_NAME];
                 if (name in this.types) {
                     var data = this.types[name].encode(value);
-                    data[this.typeName] = name;
+                    data[this.type] = name;
                     return data;
                 }
             }
@@ -125,8 +125,8 @@ var adjax = (function () {
     Serializer.prototype.decode = function (data) {
         return JSON.parse(data, (function (key, value) {
             if (value && typeof value === 'object' &&
-                    value[this.typeName] !== undefined) {
-                var name = value[this.typeName];
+                    value[this.type] !== undefined) {
+                var name = value[this.type];
                 if (this.types[name] === undefined) {
                     throw new Error(
                         "Custom type '" + name + "' not implemented");
@@ -140,8 +140,8 @@ var adjax = (function () {
     /**
      * Interface object
      */
-    var Interface = function (data, views, typeName) {
-        this.serializer = new Serializer(typeName);
+    var Interface = function (data, views, type) {
+        this.serializer = new Serializer(type);
         this.data = data;
         this.views = views;
         this.pipeline = [];
@@ -178,23 +178,36 @@ var adjax = (function () {
         var view = this.views[app][name];
 
         return (function () {
-            var callback;
             var values = Array.prototype.slice.call(arguments, 0);
-            if (typeof arguments[arguments.length - 1] === 'function') {
+
+            var callback;
+            if (typeof values[values.length - 1] === 'function') {
                 callback = values.pop();
             }
+
+            var update;
+            if (typeof values[values.length - 1] === 'function') {
+                update = values.pop();
+            }
+
             var data = utils.obj(utils.zip([view['args'], values]));
+            if (update) {
+                data = update(data);
+            }
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', view['url']);
-            if (callback) {
-                xhr.onreadystatechange = (function () {
-                    if (xhr.readyState === 4) {
-                        var data = this.serializer.decode(xhr.responseText);
+            xhr.onreadystatechange = (function () {
+                if (xhr.readyState === 4) {
+                    var data = this.serializer.decode(xhr.responseText);
+                    if (data.error) {
+                        throw new Error(data.message);
+                    }
+                    if (callback) {
                         callback(data);
                     }
-                }).bind(this);
-            }
+                }
+            }).bind(this);
 
             this.pipeline.forEach(function (item) {
                 item(xhr);

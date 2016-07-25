@@ -1,5 +1,5 @@
 ADJAX.register(function (xhr) {
-    xhr.setRequestHeader('X-CSRFToken', adjax.utils.getCookie('csrftoken'));
+    xhr.setRequestHeader('X-CSRFToken', adjax.utils.cookie('csrftoken'));
 });
 
 var CustomType = function (x, y) {
