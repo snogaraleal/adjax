@@ -192,7 +192,7 @@ var adjax = (function () {
 
             var data = utils.obj(utils.zip([view['args'], values]));
             if (update) {
-                data = update(data);
+                update(data);
             }
 
             var xhr = new XMLHttpRequest();
