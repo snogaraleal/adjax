@@ -200,7 +200,7 @@ var adjax = (function () {
             xhr.onreadystatechange = (function () {
                 if (xhr.readyState === 4) {
                     var data = this.serializer.decode(xhr.responseText);
-                    if (data.error) {
+                    if (data && data.error) {
                         throw new Error(data.message);
                     }
                     if (callback) {
