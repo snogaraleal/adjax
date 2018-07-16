@@ -1,6 +1,9 @@
 from collections import defaultdict
 
-from django.core.urlresolvers import reverse
+try:
+    from django.core.urlresolvers import reverse
+except ImportError:
+    from django.urls import reverse
 
 from .utils.inspect import get_full_arg_spec
 
@@ -63,7 +66,7 @@ class View(object):
         """ Get URL for view.
         """
         from adjax import views
-        return reverse(views.dispatch, args=(self.app, self.name))
+        return reverse('adjax:dispatch', args=(self.app, self.name))
 
     ########
     # DATA #

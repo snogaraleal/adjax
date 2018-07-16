@@ -1,6 +1,9 @@
 from django import template
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.core.urlresolvers import reverse
+try:
+    from django.core.urlresolvers import reverse
+except ImportError:
+    from django.urls import reverse
 from django.utils import safestring
 
 
@@ -25,4 +28,4 @@ def adjax_scripts():
     """
     from adjax import views
     return safestring.mark_safe(get_script_tags(static('adjax/base.js'),
-                                reverse(views.interface)))
+                                                reverse('adjax:interface')))

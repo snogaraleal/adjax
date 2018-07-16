@@ -2,11 +2,12 @@ from json import dumps
 
 from django.http import HttpResponse
 from django.middleware.csrf import get_token
+from django.utils.deprecation import MiddlewareMixin
 
 from .views import DispatchError
 
 
-class DispatchErrorMiddleware(object):
+class DispatchErrorMiddleware(MiddlewareMixin):
     """ Middleware for catching dispatch errors.
     """
 
@@ -20,7 +21,7 @@ class DispatchErrorMiddleware(object):
             }), content_type='application/json', status=self.HTTP_STATUS)
 
 
-class CsrfEnforceMiddleware(object):
+class CsrfEnforceMiddleware(MiddlewareMixin):
     """ Middleware that ensures a CSRF token cookie is sent.
     """
 
