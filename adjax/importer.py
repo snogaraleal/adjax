@@ -1,11 +1,10 @@
 import six
+from .conf import settings
 
 if six.PY3:
     from importlib import import_module
 else:
     from django.utils.importlib import import_module
-
-from .conf import settings
 
 
 class Importer(object):

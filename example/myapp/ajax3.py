@@ -20,7 +20,7 @@ def func1(request, a: int, b, c=1):
 
 @registry.register
 @typed()
-def func2(request, a: int=1, b: int=2, c: int=3) -> CustomObject:
+def func2(request, a: int = 1, b: int = 2, c: int = 3) -> CustomObject:
     return CustomObject(1, 2)
 
 

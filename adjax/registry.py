@@ -65,8 +65,8 @@ class View(object):
     def url(self):
         """ Get URL for view.
         """
-        from adjax import views
-        return reverse('adjax:dispatch', args=(self.app, self.name))
+        from adjax import views  # noqa
+        return reverse('adjax_dispatch', args=(self.app, self.name))
 
     ########
     # DATA #

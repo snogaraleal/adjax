@@ -4,5 +4,5 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
-    url(r'^adjax/', include(('adjax.urls', 'adjax'), namespace='adjax')),
+    url(r'^adjax/', include('adjax.urls')),
 ]

@@ -6,11 +6,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-adjax',
-    version='0.9',
+    version='1.0',
     description='Django AJAX RPC.',
     long_description=('Easy-to-use AJAX-based RPC mechanism for Django with '
                       'extensible serialization.'),
-    url='http://adjax.io',
+    url='https://adjax.io',
     license='MIT',
     author='Sebastian Nogara',
     author_email='snogaraleal@gmail.com',

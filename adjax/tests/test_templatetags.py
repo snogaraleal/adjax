@@ -1,5 +1,9 @@
 from django.test import TestCase
-from django.contrib.staticfiles.templatetags.staticfiles import static
+
+try:
+    from django.contrib.staticfiles.templatetags.staticfiles import static
+except ImportError:
+    from django.templatetags.static import static
 
 try:
     from django.core.urlresolvers import reverse
@@ -37,7 +41,7 @@ class TemplateTagsTestCase(TestCase):
         adjax_js_html = adjax_scripts()
 
         base_js_html = get_script_tag(static('adjax/base.js'))
-        interface_js_html = get_script_tag(reverse('adjax:interface'))
+        interface_js_html = get_script_tag(reverse('adjax_interface'))
 
         self.assertIn(base_js_html, adjax_js_html)
         self.assertIn(interface_js_html, adjax_js_html)
