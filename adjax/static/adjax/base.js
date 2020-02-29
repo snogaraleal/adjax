@@ -195,25 +195,52 @@ var adjax = (function () {
                 update(data);
             }
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', view['url']);
-            xhr.onreadystatechange = (function () {
-                if (xhr.readyState === 4) {
-                    var data = this.serializer.decode(xhr.responseText);
-                    if (data && data.error) {
-                        throw new Error(data.message);
-                    }
-                    if (callback) {
-                        callback(data);
-                    }
-                }
-            }).bind(this);
+            var self = this;
 
-            this.pipeline.forEach(function (item) {
-                item(xhr);
+            var promise = new Promise(function (resolve, reject) {
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', view['url']);
+
+                xhr.onreadystatechange = function () {
+                    try {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            if (xhr.status === 0 && !content) {
+                                throw new Error('Connection error');
+                            }
+
+                            var content = xhr.responseText;
+                            var data = self.serializer.decode(content);
+                            if (data && data.error) {
+                                throw new Error(data.message);
+                            }
+                            resolve(data);
+                        }
+                    } catch (exception) {
+                        reject(exception);
+                    }
+                };
+
+                xhr.onerror = function (event) {
+                    reject(event);
+                };
+
+                self.pipeline.forEach(function (item) {
+                    item(xhr);
+                });
+
+                try {
+                    xhr.send(self.serializer.encode(data));
+                } catch (exception) {
+                    reject(exception);
+                }
             });
 
-            xhr.send(this.serializer.encode(data));
+            if (callback) {
+                promise.then(callback);
+            }
+
+            return promise;
         }).bind(this);
     };
 
