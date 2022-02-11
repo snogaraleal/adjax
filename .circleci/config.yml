@@ -4,7 +4,7 @@ orbs:
   python: circleci/python@1.5.0
 
 jobs:
-  my-job:
+  build:
     docker:
       - image: cimg/python:3.10.2
     working_directory: ~/adjax/example
